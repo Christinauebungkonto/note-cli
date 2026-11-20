@@ -1,12 +1,78 @@
 <!doctype html>
 <html lang="de">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>note-cli</title></head>
-<body style="font-family: system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem;">
-  <h1>note-cli</h1>
-  <p>Notizen speichern, auflisten und löschen, direkt im Terminal.</p>
-  <pre>./note add Milch kaufen
-./note list
-./note delete &lt;hash&gt;</pre>
-  <p>Jede Notiz liegt als Textdatei unter <code>.notes/db/</code>; der Dateiname ist der SHA-Hash des Inhalts.</p>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>note-cli – Notizen im Terminal</title>
+<style>
+  :root {
+    --bg: #f7f8fa; --card: #ffffff; --text: #1d2330; --muted: #5b6474;
+    --accent: #2f6fed; --line: #e3e7ee; --term: #161b26; --term-text: #d7dde8;
+    --prompt: #7cc4a0; --hash: #e6b673;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 46rem; margin: 0 auto; padding: 0 1.25rem 3rem; }
+  header { padding: 3.5rem 0 1.5rem; }
+  h1 { font-size: 2.4rem; margin: 0 0 .4rem; letter-spacing: -.02em; }
+  h1 span { color: var(--accent); }
+  .lead { font-size: 1.15rem; color: var(--muted); margin: 0; }
+  h2 { font-size: 1.3rem; margin: 2.75rem 0 1rem; }
+  code, pre { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .92rem; }
+  p code { background: #eef1f6; padding: .1rem .35rem; border-radius: 4px; }
+  .cards { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.1rem; }
+  .card code { display: block; color: var(--accent); font-weight: 600; margin-bottom: .35rem; }
+  .card p { margin: 0; color: var(--muted); font-size: .95rem; }
+  pre { background: var(--term); color: var(--term-text); border-radius: 10px;
+        padding: 1.1rem 1.2rem; overflow-x: auto; line-height: 1.55; margin: 0; }
+  .p { color: var(--prompt); user-select: none; }
+  .h { color: var(--hash); }
+  .c { color: #8a93a6; }
+  footer { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--line);
+           color: var(--muted); font-size: .9rem; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>note<span>-cli</span></h1>
+    <p class="lead">Notizen direkt im Terminal: schnell gespeichert, schnell aufgelistet, und sie bleiben auf deinem Rechner.</p>
+  </header>
+
+  <h2>Die Befehle</h2>
+  <div class="cards">
+    <div class="card"><code>note add &lt;text&gt;</code><p>Speichert eine Notiz und gibt ihren Hash aus.</p></div>
+    <div class="card"><code>note list</code><p>Zeigt alle Notizen mit ihrem Hash.</p></div>
+    <div class="card"><code>note delete &lt;hash&gt;</code><p>Löscht die Notiz mit diesem Hash.</p></div>
+  </div>
+
+  <h2>So nutzt du sie</h2>
+<pre><span class="p">$</span> ./note add Milch kaufen
+<span class="h">653d4ad29a1c5d5045882b9755fa0da8152fb02dba5c37dfe157664e560eeda5</span>
+<span class="p">$</span> ./note add Zahnarzt Dienstag 10 Uhr
+<span class="h">90d9ed2a8ed0623eb7e76bbdf381f03636177373efa21c18542a092596c9780d</span>
+<span class="p">$</span> ./note list
+<span class="h">653d4ad29a1c5d5045882b9755fa0da8152fb02dba5c37dfe157664e560eeda5</span>  Milch kaufen
+<span class="h">90d9ed2a8ed0623eb7e76bbdf381f03636177373efa21c18542a092596c9780d</span>  Zahnarzt Dienstag 10 Uhr
+<span class="p">$</span> ./note delete 653d4ad29a1c5d5045882b9755fa0da8152fb02dba5c37dfe157664e560eeda5</pre>
+
+  <h2>So liegen deine Daten</h2>
+<pre>.notes/
+└── db/
+    ├── <span class="h">653d4ad29a1c…</span>   <span class="c"># Milch kaufen</span>
+    └── <span class="h">90d9ed2a8ed0…</span>   <span class="c"># Zahnarzt Dienstag 10 Uhr</span></pre>
+  <p>Jede Notiz ist eine einfache Textdatei, ohne Titel und ohne Endung. Der Dateiname ist der SHA-Hash ihres Inhalts: gleicher Text, gleicher Name, keine doppelten Notizen. Der Ordner <code>.notes/</code> entsteht in deinem aktuellen Verzeichnis und bleibt lokal.</p>
+
+  <h2>Loslegen</h2>
+<pre><span class="p">$</span> git clone https://github.com/Christinauebungkonto/note-cli.git
+<span class="p">$</span> cd note-cli
+<span class="p">$</span> chmod +x note</pre>
+  <p>Läuft unter macOS und Linux. Braucht nur <code>bash</code>, <code>shasum</code> und <code>awk</code>.</p>
+
+  <footer>note-cli · <a href="https://github.com/Christinauebungkonto/note-cli">Quellcode auf GitHub</a></footer>
+</main>
 </body>
 </html>
